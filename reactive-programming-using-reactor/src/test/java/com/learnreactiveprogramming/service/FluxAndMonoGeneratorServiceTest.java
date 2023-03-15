@@ -69,4 +69,31 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNext("ALEX", "BEN", "CHLOE")
                 .verifyComplete();
     }
+
+    //  verify that the reactive stream is immutable
+    @Test
+    void namesFlux_immutability() {
+        var namesFluxMapUpperCase = fluxAndMonoGeneratorService.namesFlux_immutability();
+
+        StepVerifier.create(namesFluxMapUpperCase)
+                .expectNext("alex", "ben", "chloe")
+//                .expectNext("ALEX", "BEN", "CHLOE") // This would fail the test
+                .verifyComplete();
+    }
+
+    @Test
+    void namesFluxMapByLength() {
+        var namesFlux = fluxAndMonoGeneratorService.namesFluxMapByLength(3);
+
+        StepVerifier.create(namesFlux)
+                .expectNext("4-alex", "5-chloe")
+                .verifyComplete();
+    }
+
+    @Test
+    void namesFluxFlatMapToStringArray() {
+        StepVerifier.create(fluxAndMonoGeneratorService.namesFluxFlatMapToStringArray(3))
+                .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
+                .verifyComplete();
+    }
 }

@@ -25,6 +25,41 @@ public class FluxAndMonoGeneratorService {
                 .log();
     }
 
+    public Flux<String> namesFlux_immutability() {
+
+        var namesFlux = Flux.fromIterable(List.of("alex", "ben", "chloe"))
+                .log();
+
+        namesFlux.map(name -> name.toUpperCase())
+//                .map(String::toUpperCase)
+                .log();
+
+        return namesFlux;
+    }
+
+    public Flux<String> namesFluxMapByLength(int length) {
+
+        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+                .log()
+                .filter(name -> name.length() > length)
+                .map(name -> name.length() + "-" + name)
+//                .map(String::toUpperCase)
+                .log();
+    }
+
+    public Flux<String> namesFluxFlatMapToStringArray(int length) {
+
+        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+                .map(String::toUpperCase)
+                .filter(name -> name.length() > length) // "ALEX", "CHLOE"
+                .flatMap(name -> splitString(name)) // "A", "L", "E", "X", "C", "L", "O", "E"
+                .log();
+    }
+
+
+    private Flux<String> splitString(String s) {
+        return Flux.fromArray(s.split(""));
+    }
 
     public static void main(String[] args) {
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
